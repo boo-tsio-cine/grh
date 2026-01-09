@@ -33,7 +33,7 @@
                     <x-nav-link :href="route('moduleconge')"  :active="request()->routeIs('moduleconge')">
                         {{ __('Congé') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('pointage')"  :active="request()->routeIs('pointage')">
+                    <x-nav-link :href="route('pointage.index')"  :active="request()->routeIs('pointage')">
                         {{ __('Présence') }}
                     </x-nav-link>
                 </div>

@@ -54,9 +54,12 @@ Route::middleware('auth', 'verified')->group(function () {
     // Route::delete('/modulecongedestroy/{id}', [LeavesTypesController::class, 'destroy'])->name('modulecongee.destroy');
 
          // pointage
-    Route::get('/pointage', [PointageController::class, 'index'])->name('pointage');
+    Route::get('/pointage', [PointageController::class, 'index'])->name('pointage.index');
     Route::post('/pointagestore', [PointageController::class, 'store'])->name('pointage.store');
     Route::put('/pointage/{id}/checkout', [PointageController::class, 'checkout'])->name('pointage.checkout');
+    Route::get('/pointage/date', [PointageController::class, 'byDate'])
+    ->name('pointage.byDate');
+
     // Route::delete('/congeedestroy/{id}', [LeavesTypesController::class, 'destroy'])->name('congee.destroy');
 
 

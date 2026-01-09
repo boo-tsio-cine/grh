@@ -190,9 +190,18 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="button">
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createModal">Liste présence</button>
-                    </div> 
+                   <div class="d-flex gap-2 mb-3">
+                        <input type="date" id="selectedDate"
+                            class="form-control"
+                            value="{{ now()->toDateString() }}" name="data">
+
+                        <button class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#resultModal">
+                                Afficher
+                        </button>
+                    </div>
+
                                 
                      @if(session('success'))
                          <div class="alert alert-success">
@@ -226,6 +235,10 @@
                                                 now()->startOfDay(),
                                                 now()->endOfDay()
                                         ])->first();
+
+                                        $heureinit = \Carbon\Carbon::createFromTime(8, 0, 0);
+                                        $heureArrivee = \Carbon\Carbon::parse($todayPointage->check_in);
+
                                     @endphp
 
                                     <tr>
@@ -249,6 +262,9 @@
                                             {{-- déjà arrivé --}}
                                                 <span class="badge bg-primary">
                                                     {{ \Carbon\Carbon::parse($todayPointage->check_in)->format('H:i')}}
+                                                    @if ($heureArrivee->gt($heureinit))
+                                                        (En retard) 
+                                                    @endif
                                                 </span>
                                             @endif
                                         </td>
@@ -295,6 +311,53 @@
 
                     @endif
                       
+                    <div class="modal fade" id="resultModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Résultats du pointage</h5>
+                                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <table class="table table-bordered text-center">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Employé</th>
+                                                <th>Arrivée</th>
+                                                <th>Sortie</th>
+                                                <th>Total heures</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modalContent">
+                                            @foreach ($pointages as $po)
+                                                <tr>
+                                                    <td colspan="4">
+                                                       {{ $po->id_employee }}
+                                                    </td>
+                                            </tr>
+                                            @endforeach
+                                            
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($pointage -> isEmpty())
+                    @else
+                        @foreach ($pointage as $p)
+                            {{ \Carbon\Carbon :: parse($p->date)->format('d/m/Y') }}
+                        @endforeach
+                    @endif
+
+                    
+
                 </div>
                         
             </div>
@@ -302,11 +365,8 @@
     </div>
 
     <script>
-        const arrived = document.selectorById('btn_arrived');
-
-        arrived.addEventListener("click",function(){
-            alert('hello');
-        });
+  
     </script>
+
 
 </x-app-layout>

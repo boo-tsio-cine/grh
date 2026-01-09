@@ -17,15 +17,38 @@ class PointageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         //
 
         $employee = Employee::with('pointages')->orderBy("last_name")->get(); 
         $dep = Departement::orderBy("abrev")->get();
+        $pointage = Pointage::orderBy('date')->get();
 
-        return view('pointage.index', compact('employee','dep'));
+        $data = $request->data;
+
+        
+
+        $date = $request->date ?? now()->toDateString();
+
+        $pointages = Pointage::with('employee')
+            ->whereDate('date', $data)
+            ->get();
+
+        return view('pointage.index', compact('employee','dep','pointage', 'pointages'));
+        
+        
+
     }
+
+
+    // public function byDate(Request $request)
+    // {
+        
+
+    //     return response()->json($pointages);
+    // }
+
 
     /**
      * Show the form for creating a new resource.
